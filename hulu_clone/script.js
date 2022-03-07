@@ -9,3 +9,9 @@ LOGIN.addEventListener('click', () => {
 CLOSE.addEventListener('click', () => {
     MODAL.classList.toggle("hidden")
 })
+
+window.addEventListener('click', (e) => {
+    if (e.target == MODAL) {
+        MODAL.classList.add("hidden")
+    }
+})
