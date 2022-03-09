@@ -5,14 +5,16 @@ const mongoose = require('mongoose')
 const expressValidator = require('express-validator');
 const flash = require('connect-flash')
 const session = require('express-session')
+const passport = require('passport')
+const config = require('./config/database')
 
-mongoose.connect('mongodb://localhost/nodekb')
+mongoose.connect(config.database)
 let db = mongoose.connection
 
 //init app
 const app = express()
 
-// BodyPaser Middleware
+// BodyParser Middleware
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -53,6 +55,16 @@ app.use(function (req, res, next) {
 //       };
 //     }
 //   })); DEPRECATED
+
+// config passport + middleware
+app.use(passport.initialize())
+app.use(passport.session())
+require('./config/passport')(passport)
+
+app.get('*',(req, res, next)=> {
+    res.locals.user = req.user || null
+    next()
+})
 
 //bring in models
 let Article = require('./models/article.js')

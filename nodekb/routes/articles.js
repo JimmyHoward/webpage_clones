@@ -1,11 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
-// bring in article model
+// bring in article & user model
 let Article = require('../models/article')
+let User = require('../models/user')
 
-//addroute
-router.get('/add', (req, res) => {
+//add page route
+router.get('/add', ensureAuthenthicated, (req, res) => {
     res.render('add_article', {
         title: 'Add Article'
     })
@@ -15,7 +16,7 @@ router.get('/add', (req, res) => {
 router.post('/add', (req, res) => {
     let article = new Article()
     article.title = req.body.title
-    article.author = req.body.author
+    article.author = req.user._id
     article.body = req.body.body
 
     article.save(err => {
@@ -29,14 +30,28 @@ router.post('/add', (req, res) => {
 router.get('/:id', (req, res) => {
     Article.findById(req.params.id, (err, article) => {
         if (err) return console.log(err) 
-        res.render('article', {
-            article: article
+        User.findById(article.author, (err, user)=> {
+            if (err) return console.log(err) 
+            res.render('article', {
+                article: article,
+                author: user.name
+            })
         })
     })
 })
 
+// access control
+function ensureAuthenthicated(req, res, next) {
+    if (req.isAuthenthicated()) {
+        return next()
+    } else {
+        req.flash('danger', "Please log in.")
+        res.redirect('/users/login')
+    }
+}
+
 // load edit form
-router.get('/edit/:id', (req, res) => {
+router.get('/edit/:id', ensureAuthenthicated, (req, res) => {
     Article.findById(req.params.id,(err, article) => {
         if (err) return console.log(err)
         res.render('edit_article', {

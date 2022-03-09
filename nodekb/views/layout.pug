@@ -13,14 +13,18 @@ html
                 span.fs-4 Knowledge Base
             .navbar-header 
                 ul.nav.navbar-nav
-                    li.active 
+                    li 
                         a.nav-link(href='/') Home
-                    li
-                        a.nav-link(href='/articles/add') Add Article
-                    li
-                        a.nav-link(href='/users/register') Register
-                    li
-                        a.nav-link(href='/users/login') Log In
+                    if user 
+                        li
+                            a.nav-link(href='/articles/add') Add Article
+                        li
+                            a.nav-link(href='/users/logout') Log Out
+                    else
+                        li
+                            a.nav-link(href='/users/register') Register
+                        li
+                            a.nav-link(href='/users/login') Log In
 
         .container
             != messages('message', locals)
