@@ -55,7 +55,7 @@ app.use(function (req, res, next) {
 //   })); DEPRECATED
 
 //bring in models
-let Article = require('./models/articles')
+let Article = require('./models/article.js')
 const { read } = require('fs')
 
 db.once('open', ()=> {
@@ -88,7 +88,9 @@ app.get('/', (req, res) => {
 })
 
 let articles = require('./routes/articles')
+let users = require('./routes/users')
 app.use('/articles', articles)
+app.use('/users', users)
 
 //start server
 app.listen(3000, () => {

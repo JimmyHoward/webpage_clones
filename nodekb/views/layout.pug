@@ -11,11 +11,16 @@ html
                 svg.bi.me-2(width='40' height='32')
                     use(xlink:href='#bootstrap')
                 span.fs-4 Knowledge Base
+            .navbar-header 
                 ul.nav.navbar-nav
-                li.active 
-                    a.nav-link(href='/') Home
-                li
-                    a.nav-link(href='/articles/add') Add Article
+                    li.active 
+                        a.nav-link(href='/') Home
+                    li
+                        a.nav-link(href='/articles/add') Add Article
+                    li
+                        a.nav-link(href='/users/register') Register
+                    li
+                        a.nav-link(href='/users/login') Log In
 
         .container
             != messages('message', locals)
