@@ -18,6 +18,11 @@ html
                     a.nav-link(href='/articles/add') Add Article
 
         .container
+            != messages('message', locals)
+            //- some express session syntax^
+            if errors
+                each error, i in errors 
+                    div(class="alert alert-danger") #{error.msg}
             block content 
             br
             hr
