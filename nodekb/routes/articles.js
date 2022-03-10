@@ -54,6 +54,10 @@ function ensureAuthenthicated(req, res, next) {
 router.get('/edit/:id', ensureAuthenthicated, (req, res) => {
     Article.findById(req.params.id,(err, article) => {
         if (err) return console.log(err)
+        if (article.author != req.user._id) {
+            req.flash('danger', 'Not Authorized')
+            res.redirect('/')
+        }
         res.render('edit_article', {
             title:'Edit Article',
             article:article
@@ -81,13 +85,23 @@ router.post('/edit/:id', (req, res) => {
 // handle delete
 
 router.delete('/:id', (req, res) => {
+    if (!req.user._id) {
+        res.status(500).send()
+    }
+
     let query = {_id:req.params.id}
 
-    Article.deleteOne(query, err => {
-        if (err) return console.log(err)
-        req.flash('success', 'Article Deleted')
-        res.send('Success')
-    })
+    Article.findById(req.params.id, (err, article) => {
+        if (req.user.id != article.author) {
+            res.status(500).send()
+        } else {
+            Article.deleteOne(query, err => {
+                if (err) return console.log(err)
+                req.flash('success', 'Article Deleted')
+                res.send('Success')
+            })
+        }
+    })  
 })
 
 module.exports = router;
