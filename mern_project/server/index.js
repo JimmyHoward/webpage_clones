@@ -5,6 +5,7 @@ import cors from 'cors';
 
 import postRoutes from './routes/posts.js';
 import userRoutes from './routes/users.js';
+import 'dotenv/config';
 
 const app = express();
 
@@ -15,8 +16,7 @@ app.use(cors());
 app.use('/posts', postRoutes);
 app.use('/user', userRoutes);
 
-const CONNECTION_URL =
-	'mongodb+srv://JimmyHoward:pwd@cluster0.7me4t.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const CONNECTION_URL = `mongodb+srv://JimmyHoward:${process.env.MONGO_PASSWORD}@cluster0.7me4t.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const PORT = process.env.PORT || 5000;
 
 mongoose
@@ -26,4 +26,5 @@ mongoose
 	)
 	.catch((error) => console.log(`${error} did not connect`));
 
-// mongoose.set('useFindAndModify', false); DEPRECATED
+mongoose.set('useFindAndModify', false);
+// DEPRECATED;
