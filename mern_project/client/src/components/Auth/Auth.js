@@ -7,6 +7,15 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from './Input';
 import { GoogleLogin } from 'react-google-login';
 import { useDispatch } from 'react-redux';
+import { signIn, signUp } from '../../actions/auth';
+
+const initialState = {
+	firstName: '',
+	lastName: '',
+	email: '',
+	password: '',
+	confirmPassword: ''
+};
 
 const Auth = () => {
 	const classes = useStyles();
@@ -15,10 +24,20 @@ const Auth = () => {
 
 	const [showPassword, setShowPassword] = useState(false);
 	const [isSignUp, setIsSignUp] = useState(false);
+	const [formData, setFormData] = useState(initialState);
 
-	const handleSubmit = () => {};
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (isSignUp) {
+			dispatch(signUp(formData, navigate));
+		} else {
+			dispatch(signIn(formData, navigate));
+		}
+	};
 
-	const handleChange = () => {};
+	const handleChange = (e) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
 
 	const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
 
@@ -114,8 +133,7 @@ const Auth = () => {
 								startIcon={<Icon />}
 								variant="contained"
 							>
-								{' '}
-								Google Sign In{' '}
+								Google Sign In
 							</Button>
 						)}
 						onSuccess={googleSuccess}
